@@ -1,0 +1,29 @@
+name: WheelLedger
+description: Review file changes between two pure-Python wheels
+inputs:
+  before:
+    description: Path to the baseline wheel
+    required: true
+  after:
+    description: Path to the candidate wheel
+    required: true
+  fail-on-removal:
+    description: Fail the step when files disappear
+    default: 'false'
+runs:
+  using: composite
+  steps:
+    - name: Compare installed files
+      shell: bash
+      env:
+        BASELINE: ${{ inputs.before }}
+        CANDIDATE: ${{ inputs.after }}
+        FAIL_ON_REMOVAL: ${{ inputs.fail-on-removal }}
+      run: |
+        flags=()
+        case "$FAIL_ON_REMOVAL" in
+          true) flags+=(--fail-on-removal) ;;
+          false) ;;
+          *) echo 'fail-on-removal must be true or false' >&2; exit 2 ;;
+        esac
+        python "$GITHUB_ACTION_PATH/wheelledger.py" --summary "$GITHUB_STEP_SUMMARY" "${flags[@]}" -- "$BASELINE" "$CANDIDATE"

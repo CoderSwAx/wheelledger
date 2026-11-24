@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wheelledger"
+version = "0.1.0"
+description = "Review installed file changes between pure-Python wheel releases"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+dependencies = []
+
+[project.scripts]
+wheelledger = "wheelledger:main"
+
+[tool.setuptools]
+py-modules = ["wheelledger"]
